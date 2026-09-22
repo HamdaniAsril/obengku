@@ -219,17 +219,6 @@ export function TirePressureCalculator() {
               <dd className="mt-1 text-2xl font-semibold">{result.rear} psi</dd>
             </div>
           </dl>
-
-          {result.notes.length > 0 ? (
-            <div className="rounded-xl border border-neutral-200 bg-white p-5 text-sm dark:border-neutral-800 dark:bg-neutral-900">
-              <p className="font-medium">Penyesuaian yang diterapkan</p>
-              <ul className="mt-2 list-inside list-disc space-y-1 text-neutral-500">
-                {result.notes.map((note) => (
-                  <li key={note}>{note}</li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
         </div>
       ) : null}
 
