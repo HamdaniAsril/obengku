@@ -113,14 +113,14 @@ registry.
    export const tools: ToolDefinition[] = [ageCalculatorTool];
    ```
 
-   Sesudah menambah tool kedua (folder `src/tools/berat-badan/`):
+   Sesudah menambah tool kedua (folder `src/tools/tire-pressure/`):
 
    ```ts
    import type { ToolDefinition } from './types';
    import ageCalculatorTool from './age-calculator';
-   import beratBadanTool from './berat-badan';
+   import tirePressureTool from './tire-pressure';
 
-   export const tools: ToolDefinition[] = [ageCalculatorTool, beratBadanTool];
+   export const tools: ToolDefinition[] = [ageCalculatorTool, tirePressureTool];
    ```
 
    Sisa berkasnya, termasuk `getTool`, biarkan apa adanya:
