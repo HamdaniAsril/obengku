@@ -2,16 +2,19 @@
 
 import { useMemo, useState } from 'react';
 import {
+  CAR_TYPE_OPTIONS,
   findTire,
   listRims,
   listTires,
   passengerOptions,
   recommendPressure,
+  type CarType,
   type LoadLevel,
   type VehicleType,
 } from './logic';
 
 const DEFAULT_VEHICLE: VehicleType = 'motor';
+const DEFAULT_CAR_TYPE: CarType = 'sedan';
 
 const LOAD_OPTIONS: { value: LoadLevel; label: string }[] = [
   { value: 'none', label: 'Tidak ada' },
@@ -40,6 +43,7 @@ export function TirePressureCalculator() {
   );
   const [passengers, setPassengers] = useState<number>(1);
   const [load, setLoad] = useState<LoadLevel>('none');
+  const [carType, setCarType] = useState<CarType>(DEFAULT_CAR_TYPE);
 
   const rims = listRims(vehicle);
   const tires = listTires(vehicle, rim);
@@ -51,6 +55,7 @@ export function TirePressureCalculator() {
     setRim(nextRim);
     setTireLabel(firstTireLabel(next, nextRim));
     setPassengers(passengerOptions(next)[0]);
+    setCarType(DEFAULT_CAR_TYPE);
   };
 
   const handleRimChange = (next: number) => {
@@ -65,7 +70,13 @@ export function TirePressureCalculator() {
     }
     try {
       return {
-        result: recommendPressure({ vehicle, size, passengers, load }),
+        result: recommendPressure({
+          vehicle,
+          size,
+          passengers,
+          load,
+          ...(vehicle === 'mobil' ? { carType } : {}),
+        }),
         error: null,
       };
     } catch (err) {
@@ -74,7 +85,7 @@ export function TirePressureCalculator() {
         error: err instanceof Error ? err.message : 'Terjadi kesalahan.',
       };
     }
-  }, [vehicle, tireLabel, passengers, load]);
+  }, [vehicle, tireLabel, passengers, load, carType]);
 
   return (
     <div className="space-y-6">
@@ -93,6 +104,26 @@ export function TirePressureCalculator() {
             <option value="mobil">Mobil</option>
           </select>
         </div>
+
+        {vehicle === 'mobil' ? (
+          <div className="space-y-2">
+            <label htmlFor="jenis-mobil" className="block text-sm font-medium">
+              Jenis mobil
+            </label>
+            <select
+              id="jenis-mobil"
+              value={carType}
+              onChange={(event) => setCarType(event.target.value as CarType)}
+              className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            >
+              {CAR_TYPE_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : null}
 
         <div className="space-y-2">
           <label htmlFor="ukuran-velg" className="block text-sm font-medium">

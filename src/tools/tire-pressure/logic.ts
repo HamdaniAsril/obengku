@@ -1,5 +1,6 @@
 export type VehicleType = 'motor' | 'mobil';
 export type LoadLevel = 'none' | 'light' | 'medium' | 'full';
+export type CarType = 'city' | 'hatchback' | 'sedan' | 'mpv' | 'suv' | 'pickup';
 
 export interface TireSize {
   label: string;
@@ -11,6 +12,7 @@ export interface TireSize {
 const TIRES: Record<VehicleType, TireSize[]> = {
   motor: [
     { label: '80/90-14', rim: 14, baseFront: 28, baseRear: 33 },
+    { label: '90/80-14', rim: 14, baseFront: 29, baseRear: 34 },
     { label: '90/90-14', rim: 14, baseFront: 28, baseRear: 33 },
     { label: '100/80-14', rim: 14, baseFront: 29, baseRear: 34 },
     { label: '70/90-17', rim: 17, baseFront: 26, baseRear: 30 },
@@ -19,18 +21,59 @@ const TIRES: Record<VehicleType, TireSize[]> = {
     { label: '100/80-17', rim: 17, baseFront: 29, baseRear: 33 },
     { label: '110/70-17', rim: 17, baseFront: 30, baseRear: 34 },
     { label: '120/70-17', rim: 17, baseFront: 30, baseRear: 35 },
+    { label: '130/70-17', rim: 17, baseFront: 30, baseRear: 36 },
+    { label: '140/70-17', rim: 17, baseFront: 31, baseRear: 36 },
   ],
   mobil: [
     { label: '175/70R13', rim: 13, baseFront: 30, baseRear: 30 },
+    { label: '175/65R13', rim: 13, baseFront: 30, baseRear: 30 },
+    { label: '185/70R13', rim: 13, baseFront: 30, baseRear: 30 },
     { label: '185/65R14', rim: 14, baseFront: 30, baseRear: 30 },
+    { label: '175/65R14', rim: 14, baseFront: 30, baseRear: 30 },
+    { label: '195/70R14', rim: 14, baseFront: 32, baseRear: 32 },
     { label: '185/65R15', rim: 15, baseFront: 31, baseRear: 31 },
     { label: '195/60R15', rim: 15, baseFront: 32, baseRear: 32 },
+    { label: '195/50R15', rim: 15, baseFront: 32, baseRear: 32 },
+    { label: '195/65R15', rim: 15, baseFront: 32, baseRear: 32 },
     { label: '205/55R16', rim: 16, baseFront: 32, baseRear: 32 },
     { label: '215/60R16', rim: 16, baseFront: 33, baseRear: 33 },
+    { label: '205/60R16', rim: 16, baseFront: 33, baseRear: 33 },
+    { label: '215/65R16', rim: 16, baseFront: 34, baseRear: 34 },
     { label: '225/45R17', rim: 17, baseFront: 33, baseRear: 33 },
     { label: '235/65R17', rim: 17, baseFront: 34, baseRear: 34 },
+    { label: '215/55R17', rim: 17, baseFront: 33, baseRear: 33 },
+    { label: '225/55R17', rim: 17, baseFront: 33, baseRear: 33 },
   ],
 };
+
+export const CAR_TYPE_OPTIONS: { value: CarType; label: string }[] = [
+  { value: 'city', label: 'City car' },
+  { value: 'hatchback', label: 'Hatchback' },
+  { value: 'sedan', label: 'Sedan' },
+  { value: 'mpv', label: 'MPV / keluarga' },
+  { value: 'suv', label: 'SUV' },
+  { value: 'pickup', label: 'Pikap' },
+];
+
+const CAR_TYPE_LABEL: Record<CarType, string> = {
+  city: 'City car',
+  hatchback: 'Hatchback',
+  sedan: 'Sedan',
+  mpv: 'MPV / keluarga',
+  suv: 'SUV',
+  pickup: 'Pikap',
+};
+
+const CAR_TYPE_ADJUST: Record<CarType, AxleAdjustment> = {
+  city: { front: -2, rear: -2 },
+  hatchback: { front: -1, rear: -1 },
+  sedan: { front: 0, rear: 0 },
+  mpv: { front: 1, rear: 1 },
+  suv: { front: 3, rear: 3 },
+  pickup: { front: 4, rear: 5 },
+};
+
+const NO_ADJUSTMENT: AxleAdjustment = { front: 0, rear: 0 };
 
 const PRESSURE_CAP: Record<VehicleType, number> = {
   motor: 41,
@@ -75,6 +118,10 @@ const CARGO_LABEL: Record<LoadLevel, string> = {
   full: 'penuh',
 };
 
+function adjustmentNote(psi: number, label: string): string {
+  return `${psi > 0 ? '+' : ''}${psi} psi: ${label}`;
+}
+
 export function listRims(vehicle: VehicleType): number[] {
   return [...new Set(TIRES[vehicle].map((tire) => tire.rim))].sort((a, b) => a - b);
 }
@@ -98,6 +145,7 @@ export function recommendPressure(input: {
   size: TireSize;
   passengers: number;
   load: LoadLevel;
+  carType?: CarType;
 }): { front: number; rear: number; notes: string[] } {
   const { vehicle, size, passengers, load } = input;
 
@@ -108,10 +156,26 @@ export function recommendPressure(input: {
     );
   }
 
+  const carTypeAdjust =
+    vehicle === 'mobil' && input.carType
+      ? CAR_TYPE_ADJUST[input.carType]
+      : NO_ADJUSTMENT;
+  const carTypeLabel =
+    vehicle === 'mobil' && input.carType ? CAR_TYPE_LABEL[input.carType] : '';
+
   const notes: string[] = [];
   const cargoAdjust = CARGO_ADJUST[load];
   const extraPassengers = passengers - 1;
 
+  if (carTypeAdjust.front !== 0) {
+    notes.push(adjustmentNote(carTypeAdjust.front, carTypeLabel));
+  }
+  if (carTypeAdjust.rear !== 0) {
+    const carTypeNote = adjustmentNote(carTypeAdjust.rear, carTypeLabel);
+    if (!notes.includes(carTypeNote)) {
+      notes.push(carTypeNote);
+    }
+  }
   if (passengerAdjust.front !== 0) {
     notes.push(`+${passengerAdjust.front} psi: ${extraPassengers} penumpang tambahan`);
   }
@@ -125,8 +189,10 @@ export function recommendPressure(input: {
     notes.push(`+${cargoAdjust.rear} psi: barang ${CARGO_LABEL[load]}`);
   }
 
-  let front = size.baseFront + passengerAdjust.front + cargoAdjust.front;
-  let rear = size.baseRear + passengerAdjust.rear + cargoAdjust.rear;
+  let front =
+    size.baseFront + carTypeAdjust.front + passengerAdjust.front + cargoAdjust.front;
+  let rear =
+    size.baseRear + carTypeAdjust.rear + passengerAdjust.rear + cargoAdjust.rear;
 
   const cap = PRESSURE_CAP[vehicle];
   const capNote = `Dibatasi ke maksimum ${cap} psi untuk ${VEHICLE_LABEL[vehicle]}.`;
