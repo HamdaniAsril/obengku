@@ -28,12 +28,13 @@ export default async function ToolPage({ params }: PageProps) {
       <div className="space-y-3">
         <Link
           href="/"
-          className="inline-block text-sm text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
+          className="-mx-2 inline-flex min-h-11 items-center gap-1 px-2 text-sm text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
         >
-          ← Kembali
+          <span aria-hidden>←</span>
+          Kembali
         </Link>
         <h1 className="text-2xl font-semibold tracking-tight">{tool.name}</h1>
-        <p className="text-neutral-600 dark:text-neutral-400">{tool.description}</p>
+        <p className="max-w-prose text-neutral-600 dark:text-neutral-400">{tool.description}</p>
       </div>
       <ToolComponent />
     </div>

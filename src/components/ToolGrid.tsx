@@ -4,7 +4,7 @@ import { ToolCard } from './ToolCard';
 export function ToolGrid({ tools }: { tools: ToolDefinition[] }) {
   if (tools.length === 0) {
     return (
-      <p className="text-sm text-neutral-500">
+      <p className="text-sm text-neutral-600 dark:text-neutral-400">
         Belum ada tool. Tool pertama akan segera ditambahkan.
       </p>
     );

@@ -50,7 +50,7 @@ export function AgeCalculator() {
           value={birthValue}
           max={toDateInputValue(today)}
           onChange={(event) => setBirthValue(event.target.value)}
-          className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+          className="min-h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
         />
       </div>
 
@@ -66,8 +66,8 @@ export function AgeCalculator() {
       {result ? (
         <div className="space-y-4">
           <div className="rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-800 dark:bg-neutral-900">
-            <p className="text-sm text-neutral-500">Umur</p>
-            <p className="mt-1 text-2xl font-semibold">
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">Umur</p>
+            <p className="mt-1 text-2xl font-semibold tabular-nums">
               {result.years} tahun {result.months} bulan {result.days} hari
             </p>
           </div>
@@ -82,8 +82,8 @@ export function AgeCalculator() {
                 key={item.label}
                 className="rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900"
               >
-                <dt className="text-sm text-neutral-500">{item.label}</dt>
-                <dd className="mt-1 text-lg font-medium">{item.value}</dd>
+                <dt className="text-sm text-neutral-600 dark:text-neutral-400">{item.label}</dt>
+                <dd className="mt-1 text-lg font-medium tabular-nums">{item.value}</dd>
               </div>
             ))}
           </dl>

@@ -98,7 +98,7 @@ export function TirePressureCalculator() {
             id="jenis-kendaraan"
             value={vehicle}
             onChange={(event) => handleVehicleChange(event.target.value as VehicleType)}
-            className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="min-h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
           >
             <option value="motor">Motor</option>
             <option value="mobil">Mobil</option>
@@ -114,7 +114,7 @@ export function TirePressureCalculator() {
               id="jenis-mobil"
               value={carType}
               onChange={(event) => setCarType(event.target.value as CarType)}
-              className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+              className="min-h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
             >
               {CAR_TYPE_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -133,7 +133,7 @@ export function TirePressureCalculator() {
             id="ukuran-velg"
             value={rim}
             onChange={(event) => handleRimChange(Number(event.target.value))}
-            className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="min-h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
           >
             {rims.map((item) => (
               <option key={item} value={item}>
@@ -151,7 +151,7 @@ export function TirePressureCalculator() {
             id="ukuran-ban"
             value={tireLabel}
             onChange={(event) => setTireLabel(event.target.value)}
-            className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="min-h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
           >
             {tires.map((tire) => (
               <option key={tire.label} value={tire.label}>
@@ -169,7 +169,7 @@ export function TirePressureCalculator() {
             id="jumlah-penumpang"
             value={passengers}
             onChange={(event) => setPassengers(Number(event.target.value))}
-            className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="min-h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
           >
             {passengersList.map((item) => (
               <option key={item} value={item}>
@@ -187,7 +187,7 @@ export function TirePressureCalculator() {
             id="barang-bawaan"
             value={load}
             onChange={(event) => setLoad(event.target.value as LoadLevel)}
-            className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="min-h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
           >
             {LOAD_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
@@ -211,18 +211,18 @@ export function TirePressureCalculator() {
         <div className="space-y-4">
           <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-800 dark:bg-neutral-900">
-              <dt className="text-sm text-neutral-500">Depan</dt>
-              <dd className="mt-1 text-2xl font-semibold">{result.front} psi</dd>
+              <dt className="text-sm text-neutral-600 dark:text-neutral-400">Depan</dt>
+              <dd className="mt-1 text-2xl font-semibold tabular-nums">{result.front} psi</dd>
             </div>
             <div className="rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-800 dark:bg-neutral-900">
-              <dt className="text-sm text-neutral-500">Belakang</dt>
-              <dd className="mt-1 text-2xl font-semibold">{result.rear} psi</dd>
+              <dt className="text-sm text-neutral-600 dark:text-neutral-400">Belakang</dt>
+              <dd className="mt-1 text-2xl font-semibold tabular-nums">{result.rear} psi</dd>
             </div>
           </dl>
         </div>
       ) : null}
 
-      <p className="text-sm text-neutral-500">
+      <p className="max-w-prose text-sm text-neutral-600 dark:text-neutral-400">
         Angka ini adalah estimasi dari tabel umum, bukan data dari produsen kendaraan.
         Selalu periksa stiker tekanan angin di kendaraan Anda sebelum mengisi ban.
       </p>
