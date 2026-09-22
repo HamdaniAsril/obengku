@@ -129,13 +129,18 @@ export function recommendPressure(input: {
   let rear = size.baseRear + passengerAdjust.rear + cargoAdjust.rear;
 
   const cap = PRESSURE_CAP[vehicle];
+  const capNote = `Dibatasi ke maksimum ${cap} psi untuk ${VEHICLE_LABEL[vehicle]}.`;
   if (front > cap) {
     front = cap;
-    notes.push(`Dibatasi ke maksimum ${cap} psi untuk ${VEHICLE_LABEL[vehicle]}.`);
+    if (!notes.includes(capNote)) {
+      notes.push(capNote);
+    }
   }
   if (rear > cap) {
     rear = cap;
-    notes.push(`Dibatasi ke maksimum ${cap} psi untuk ${VEHICLE_LABEL[vehicle]}.`);
+    if (!notes.includes(capNote)) {
+      notes.push(capNote);
+    }
   }
 
   return { front: Math.round(front), rear: Math.round(rear), notes };

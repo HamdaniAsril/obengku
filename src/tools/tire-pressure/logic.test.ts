@@ -5,6 +5,7 @@ import {
   listTires,
   passengerOptions,
   recommendPressure,
+  type TireSize,
 } from './logic';
 
 describe('listRims', () => {
@@ -132,6 +133,7 @@ describe('recommendPressure', () => {
     });
     expect(result.front).toBe(40);
     expect(result.rear).toBe(44);
+    expect(result.notes.some((note) => note.includes('maksimum'))).toBe(false);
   });
 
   it('menambahkan satu penumpang tambahan pada motor tanpa barang', () => {
@@ -157,6 +159,57 @@ describe('recommendPressure', () => {
         passengers: 3,
         load: 'none',
       }),
-    ).toThrow();
+    ).toThrow('Jumlah penumpang 3 tidak valid untuk motor.');
+  });
+});
+
+describe('recommendPressure — batas tekanan maksimum', () => {
+  const synthetic: TireSize = {
+    label: 'synthetic',
+    rim: 17,
+    baseFront: 50,
+    baseRear: 50,
+  };
+
+  it('membatasi tekanan depan dan belakang motor ke 41 psi', () => {
+    const result = recommendPressure({
+      vehicle: 'motor',
+      size: synthetic,
+      passengers: 1,
+      load: 'none',
+    });
+    expect(result.front).toBe(41);
+    expect(result.rear).toBe(41);
+    expect(result.notes).toEqual([
+      'Dibatasi ke maksimum 41 psi untuk motor.',
+    ]);
+  });
+
+  it('membatasi tekanan depan dan belakang mobil ke 44 psi', () => {
+    const result = recommendPressure({
+      vehicle: 'mobil',
+      size: synthetic,
+      passengers: 1,
+      load: 'none',
+    });
+    expect(result.front).toBe(44);
+    expect(result.rear).toBe(44);
+    expect(result.notes).toEqual([
+      'Dibatasi ke maksimum 44 psi untuk mobil.',
+    ]);
+  });
+
+  it('hanya mencatat batas maksimum sekali walau kedua poros dibatasi', () => {
+    const result = recommendPressure({
+      vehicle: 'mobil',
+      size: synthetic,
+      passengers: 5,
+      load: 'full',
+    });
+    expect(result.front).toBe(44);
+    expect(result.rear).toBe(44);
+    expect(result.notes.filter((note) => note.includes('maksimum'))).toEqual([
+      'Dibatasi ke maksimum 44 psi untuk mobil.',
+    ]);
   });
 });

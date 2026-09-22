@@ -34,7 +34,7 @@ function passengerLabel(passengers: number): string {
 
 export function TirePressureCalculator() {
   const [vehicle, setVehicle] = useState<VehicleType>(DEFAULT_VEHICLE);
-  const [rim, setRim] = useState<number | ''>(firstRim(DEFAULT_VEHICLE));
+  const [rim, setRim] = useState<number>(firstRim(DEFAULT_VEHICLE));
   const [tireLabel, setTireLabel] = useState<string>(
     firstTireLabel(DEFAULT_VEHICLE, firstRim(DEFAULT_VEHICLE)),
   );
@@ -42,7 +42,7 @@ export function TirePressureCalculator() {
   const [load, setLoad] = useState<LoadLevel>('none');
 
   const rims = listRims(vehicle);
-  const tires = rim === '' ? [] : listTires(vehicle, rim);
+  const tires = listTires(vehicle, rim);
   const passengersList = passengerOptions(vehicle);
 
   const handleVehicleChange = (next: VehicleType) => {
@@ -104,7 +104,6 @@ export function TirePressureCalculator() {
             onChange={(event) => handleRimChange(Number(event.target.value))}
             className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
           >
-            <option value="">Pilih velg</option>
             {rims.map((item) => (
               <option key={item} value={item}>
                 Ring {item}
@@ -120,9 +119,8 @@ export function TirePressureCalculator() {
           <select
             id="ukuran-ban"
             value={tireLabel}
-            disabled={rim === ''}
             onChange={(event) => setTireLabel(event.target.value)}
-            className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-700 dark:bg-neutral-900"
+            className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
           >
             {tires.map((tire) => (
               <option key={tire.label} value={tire.label}>
