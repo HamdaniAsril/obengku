@@ -870,21 +870,113 @@ prerendered static (SSG) dengan slug `kalkulator-umur`.
 
 **Langkah:**
 
-1. Tulis `README.md` berisi:
-   - Judul `Obengku` dan deskripsi satu paragraf.
-   - Cara menjalankan: `npm install`, `npm run dev`, buka `http://localhost:3000`.
-   - Daftar perintah: `npm run dev`, `npm run build`, `npm run start`,
-     `npm run lint`, `npm run test`, `npm run test:watch`.
-   - **Cara menambah tool baru** (4 langkah):
-     1. Buat folder `src/tools/<slug>/`.
-     2. Buat `meta.ts` (slug, name, description, icon opsional), komponen
-        `'use client'`, dan `logic.ts` bila ada logika murni.
-     3. Buat `index.ts` yang mengekspor `ToolDefinition` sebagai default.
-     4. Tambahkan import + entri pada array `tools` di `src/tools/registry.ts`.
-     5. (Opsional) Tulis `logic.test.ts` dan jalankan `npm run test`.
-   - Cara menambah tool: contoh potongan kode `index.ts` dan baris registry.
-   - Struktur folder singkat.
-   - Catatan bahwa semua tool berjalan di browser (tidak ada data yang dikirim ke server).
+1. Tulis `README.md` dengan isi berikut:
+
+````markdown
+# Obengku
+
+Kumpulan alat bantu kecil untuk pekerjaan sehari-hari. Semua tool berjalan
+sepenuhnya di browser — tidak ada data yang dikirim ke server.
+
+## Menjalankan
+
+```bash
+npm install
+npm run dev
+```
+
+Buka http://localhost:3000.
+
+## Perintah
+
+| Perintah | Kegunaan |
+| --- | --- |
+| `npm run dev` | Menjalankan dev server |
+| `npm run build` | Build produksi |
+| `npm run start` | Menjalankan hasil build |
+| `npm run lint` | Menjalankan ESLint |
+| `npm run test` | Menjalankan unit test sekali jalan |
+| `npm run test:watch` | Unit test mode watch |
+
+## Menambah tool baru
+
+Setiap tool berdiri sendiri di dalam satu folder dan didaftarkan sekali di
+registry.
+
+1. Buat folder `src/tools/<slug>/` (contoh: `src/tools/kalkulator-umur/`).
+2. Buat `meta.ts`:
+
+   ```ts
+   export const meta = {
+     slug: 'kalkulator-umur',
+     name: 'Kalkulator Umur',
+     description: 'Hitung umur lengkap dan hitung mundur ulang tahun berikutnya.',
+     category: 'Tanggal',
+     icon: '🎂',
+   } as const;
+   ```
+
+3. Buat komponen UI di folder yang sama. Tambahkan `'use client'` di baris
+   pertama jika komponen memakai state atau event handler:
+
+   ```tsx
+   'use client';
+
+   export function KalkulatorUmur() {
+     return <div />;
+   }
+   ```
+
+4. Bila ada logika yang bisa diuji, pisahkan ke `logic.ts` sebagai fungsi murni
+   (terima semua input sebagai parameter, termasuk tanggal "sekarang"), lalu
+   tulis `logic.test.ts` di sebelahnya.
+5. Buat `index.ts` yang merangkai metadata dan komponen menjadi `ToolDefinition`:
+
+   ```ts
+   import type { ToolDefinition } from '../types';
+   import { meta } from './meta';
+   import { KalkulatorUmur } from './KalkulatorUmur';
+
+   export const kalkulatorUmurTool: ToolDefinition = {
+     ...meta,
+     component: KalkulatorUmur,
+   };
+
+   export default kalkulatorUmurTool;
+   ```
+
+6. Daftarkan di `src/tools/registry.ts`:
+
+   ```ts
+   import kalkulatorUmurTool from './kalkulator-umur';
+
+   export const tools: ToolDefinition[] = [kalkulatorUmurTool];
+   ```
+
+7. Jalankan `npm run test`, `npm run lint`, dan `npm run build`.
+
+Halaman home dan route `/tools/<slug>` otomatis ikut karena keduanya membaca
+dari `registry.ts`.
+
+## Struktur folder
+
+```
+src/
+  app/                      # routing Next.js (App Router)
+    page.tsx                # home: grid semua tool
+    tools/[slug]/page.tsx   # halaman per tool
+  components/               # komponen bersama (AppShell, ToolCard, ToolGrid)
+  tools/
+    types.ts                # kontrak ToolDefinition
+    registry.ts             # daftar semua tool
+    <slug>/                 # satu folder per tool
+      meta.ts
+      index.ts
+      <Komponen>.tsx
+      logic.ts
+      logic.test.ts
+```
+````
 
 2. Verifikasi:
 
