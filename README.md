@@ -31,7 +31,11 @@ Buka http://localhost:3000.
 Setiap tool berdiri sendiri di dalam satu folder dan didaftarkan sekali di
 registry.
 
-1. Buat folder `src/tools/<slug>/` (contoh: `src/tools/age-calculator/`).
+1. Buat folder `src/tools/<nama-folder>/` (contoh: `src/tools/age-calculator/`).
+   Nama folder bebas dan **tidak harus sama** dengan `slug`: import di langkah 6
+   memakai nama folder, sedangkan URL `/tools/<slug>` memakai `slug` dari
+   `meta.ts`. Pada contoh ini foldernya `age-calculator` tetapi slug-nya
+   `kalkulator-umur`.
 2. Buat `meta.ts` — identitas tool yang dipakai untuk kartu di home dan judul
    halaman:
 
@@ -95,14 +99,33 @@ registry.
    pertama. Untuk tool lain, ganti tipe dan nama variabelnya sesuai tool —
    yang penting adalah `default export`-nya, karena itulah yang diimpor
    registry.
-6. Daftarkan di `src/tools/registry.ts`:
+6. Daftarkan di `src/tools/registry.ts`. Yang perlu Anda ubah hanya dua hal:
+   **tambahkan baris `import`** untuk tool baru, lalu **tambahkan variabelnya ke
+   dalam array `tools`**. Jangan menimpa isi array — tool yang sudah terdaftar
+   harus tetap ada. `getTool` tidak perlu diubah sama sekali.
+
+   Sebelum:
 
    ```ts
    import type { ToolDefinition } from './types';
    import ageCalculatorTool from './age-calculator';
 
    export const tools: ToolDefinition[] = [ageCalculatorTool];
+   ```
 
+   Sesudah menambah tool kedua (folder `src/tools/berat-badan/`):
+
+   ```ts
+   import type { ToolDefinition } from './types';
+   import ageCalculatorTool from './age-calculator';
+   import beratBadanTool from './berat-badan';
+
+   export const tools: ToolDefinition[] = [ageCalculatorTool, beratBadanTool];
+   ```
+
+   Sisa berkasnya, termasuk `getTool`, biarkan apa adanya:
+
+   ```ts
    export function getTool(slug: string): ToolDefinition | undefined {
      return tools.find((tool) => tool.slug === slug);
    }
@@ -122,13 +145,15 @@ src/
   app/                      # routing Next.js (App Router)
     page.tsx                # home: grid semua tool
     layout.tsx              # shell halaman
+    globals.css             # style global Tailwind
     tools/[slug]/page.tsx   # halaman per tool
   components/               # komponen bersama (AppShell, ToolCard, ToolGrid)
-  test/                     # test lintas aplikasi (smoke test)
+  test/
+    smoke.test.ts           # smoke test lintas aplikasi
   tools/
     types.ts                # kontrak ToolDefinition
     registry.ts             # daftar semua tool
-    <slug>/                 # satu folder per tool
+    <nama-folder>/          # satu folder per tool (bebas, tidak harus = slug)
       meta.ts
       index.ts
       <Komponen>.tsx
