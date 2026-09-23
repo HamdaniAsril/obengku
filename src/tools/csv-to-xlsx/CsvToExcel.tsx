@@ -104,7 +104,7 @@ export function CsvToExcel() {
           onChange={(event) => handleFile(event.target.files?.[0])}
           className="block w-full min-h-11 text-sm file:min-h-11 file:cursor-pointer file:rounded-lg file:border file:border-neutral-300 file:bg-white file:px-4 file:py-2 file:text-sm file:font-medium dark:file:border-neutral-700 dark:file:bg-neutral-900"
         />
-        <p className="text-xs text-neutral-600 dark:text-neutral-400">
+        <p className="max-w-prose text-xs text-neutral-600 dark:text-neutral-400">
           Diproses sepenuhnya di perangkat Anda — berkas tidak pernah dikirim ke server mana pun.
         </p>
       </div>
@@ -170,7 +170,7 @@ export function CsvToExcel() {
                 </tbody>
               </table>
             </div>
-            <p className="text-xs text-neutral-600 dark:text-neutral-400">
+            <p className="max-w-prose text-xs text-neutral-600 dark:text-neutral-400">
               Label di bawah tiap nilai adalah tipe sel yang akan ditulis ke Excel. Kolom
               berawalan angka nol ditandai <strong>teks</strong> agar nol di depan tidak hilang.
             </p>
