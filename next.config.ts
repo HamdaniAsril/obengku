@@ -1,8 +1,12 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  // Required for @opennextjs/cloudflare
-  // Do not set output: "export" — opennextjs handles the output
-};
+// STATIC_EXPORT=1 → file statis di `out/` untuk GitHub Pages (obengku.nekomade.com).
+// Tanpa variabel itu → build biasa untuk @opennextjs/cloudflare (Worker); jangan set
+// `output: "export"` di jalur Worker karena OpenNext yang mengurus keluarannya.
+const staticExport = process.env.STATIC_EXPORT === "1";
+
+const nextConfig: NextConfig = staticExport
+  ? { output: "export", trailingSlash: true }
+  : {};
 
 export default nextConfig;
