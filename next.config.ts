@@ -1,12 +1,10 @@
 import type { NextConfig } from "next";
 
-// STATIC_EXPORT=1 → file statis di `out/` untuk GitHub Pages (obengku.nekomade.com).
-// Tanpa variabel itu → build biasa untuk @opennextjs/cloudflare (Worker); jangan set
-// `output: "export"` di jalur Worker karena OpenNext yang mengurus keluarannya.
-const staticExport = process.env.STATIC_EXPORT === "1";
-
-const nextConfig: NextConfig = staticExport
-  ? { output: "export", trailingSlash: true }
-  : {};
+// Situs sepenuhnya statis: `next build` menulis HTML ke `out/` untuk GitHub Pages
+// (obengku.nekomade.com). trailingSlash → /tools/x/index.html, cocok dengan Pages.
+const nextConfig: NextConfig = {
+  output: "export",
+  trailingSlash: true,
+};
 
 export default nextConfig;

@@ -52,7 +52,7 @@ Tidak ada logo, tipografi, atau palet yang pernah dikunci pengguna. Perubahan vi
 - Sepuluh tool berjalan, **300 unit test** lulus, gate lint/typecheck/build hijau.
 - Keluaran Konverter CSV→XLSX diverifikasi silang dengan **openpyxl 3.1.5**, `unzip -t`, dan `xmllint`.
 - Encoder QR diverifikasi round-trip (dekode independen di test) dan silang dengan **jsQR 1.4.0** (dev-only, di luar dependensi runtime): 39/39 kasus bergaya (kotak/bulat/halus × teks pendek/panjang/emoji/URL × warna normal-terbalik × logo) tetap terpindai setelah gaya mata finder mengikuti bentuk modul.
-- Terdeploy: `https://obengku.asn-hamdaniasril.workers.dev`.
+- Terdeploy: `https://obengku.nekomade.com` (GitHub Pages, dibangun otomatis oleh GitHub Actions setiap push ke `main`).
 - Tidak ada: tangkapan layar historis, riset pengguna, logo, aset merek, testimoni, atau metrik penggunaan. Pekerjaan desain tidak boleh mengarang salah satunya.
 
 ## Product Principles

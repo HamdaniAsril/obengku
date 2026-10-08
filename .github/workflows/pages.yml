@@ -30,7 +30,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run test
-      - run: npm run build:static
+      - run: npm run build
 
       - uses: actions/upload-pages-artifact@v3
         with:

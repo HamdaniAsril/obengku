@@ -22,7 +22,7 @@ const INK = '#16181d';
 const PAPER = '#ffffff';
 
 export function QrMaker() {
-  const [text, setText] = useState('https://obengku.asn-hamdaniasril.workers.dev');
+  const [text, setText] = useState('https://obengku.nekomade.com');
   const [ecl, setEcl] = useState<EccLevel>('M');
   const [style, setStyle] = useState<ModuleStyle>('kotak');
   const [fg, setFg] = useState(INK);

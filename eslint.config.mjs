@@ -12,9 +12,6 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // Generated build output (Cloudflare / OpenNext / Wrangler):
-    ".open-next/**",
-    ".wrangler/**",
     // Scratch space for the SDD workflow (git-excluded via .git/info/exclude).
     ".superpowers/**",
   ]),

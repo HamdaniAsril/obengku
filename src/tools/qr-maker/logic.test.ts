@@ -331,7 +331,7 @@ describe('round-trip decode', () => {
   });
 
   it('URL panjang, ECC Q', () => {
-    const url = 'https://obengku.asn-hamdaniasril.workers.dev/tools/pembuat-qr-code';
+    const url = 'https://obengku.nekomade.com/tools/pembuat-qr-code/';
     expect(decodeQr(encodeQr(url, 'Q'))).toBe(url);
   });
 

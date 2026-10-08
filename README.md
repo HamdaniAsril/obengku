@@ -20,11 +20,21 @@ Buka http://localhost:3000.
 | Perintah | Kegunaan |
 | --- | --- |
 | `npm run dev` | Menjalankan dev server |
-| `npm run build` | Build produksi |
-| `npm run start` | Menjalankan hasil build |
+| `npm run build` | Build statis ke folder `out/` |
 | `npm run lint` | Menjalankan ESLint |
 | `npm run test` | Menjalankan unit test sekali jalan (`vitest run`) |
 | `npm run test:watch` | Unit test mode watch (`vitest`) |
+
+## Deploy
+
+Situs berjalan di https://obengku.nekomade.com lewat GitHub Pages. Setiap push ke
+`main` menjalankan `.github/workflows/pages.yml`: lint, test, build statis, lalu
+deploy. Domain diatur oleh `public/CNAME` dan record CNAME `obengku` →
+`hamdaniasril.github.io` di DNS `nekomade.com`.
+
+Karena build-nya statis (`output: "export"`), fitur yang butuh server Next.js —
+Route Handler dinamis, `cookies()`/`headers()`, atau route tanpa
+`generateStaticParams` — tidak bisa dipakai.
 
 ## Menambah tool baru
 
