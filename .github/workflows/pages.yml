@@ -22,7 +22,9 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          # Node 24 membawa npm 11, sama dengan yang membuat package-lock.json.
+          # npm 10 (Node 22) menolak lock file ini saat `npm ci`.
+          node-version: 24
           cache: npm
 
       - run: npm ci
