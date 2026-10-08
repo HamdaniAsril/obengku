@@ -6,9 +6,16 @@ import {
   listTires,
   passengerOptions,
   recommendPressure,
+  VEHICLE_OPTIONS,
   type CarType,
   type TireSize,
 } from './logic';
+
+describe('VEHICLE_OPTIONS', () => {
+  it('hanya menyediakan pilihan mobil', () => {
+    expect(VEHICLE_OPTIONS).toEqual([{ value: 'mobil', label: 'Mobil' }]);
+  });
+});
 
 describe('CAR_TYPE_OPTIONS', () => {
   it('mendaftar jenis mobil sesuai urutan dan label', () => {
@@ -29,7 +36,7 @@ describe('listRims', () => {
   });
 
   it('mengembalikan ring mobil yang unik dan terurut', () => {
-    expect(listRims('mobil')).toEqual([13, 14, 15, 16, 17]);
+    expect(listRims('mobil')).toEqual([13, 14, 15, 16, 17, 18, 19, 20, 21, 22]);
   });
 });
 
@@ -38,8 +45,19 @@ describe('listTires', () => {
     expect(listTires('motor', 17)).toHaveLength(8);
   });
 
-  it('mengembalikan 3 ukuran ban mobil untuk ring 13', () => {
-    expect(listTires('mobil', 13)).toHaveLength(3);
+  it.each([
+    [13, 5],
+    [14, 6],
+    [15, 7],
+    [16, 8],
+    [17, 8],
+    [18, 8],
+    [19, 8],
+    [20, 8],
+    [21, 6],
+    [22, 6],
+  ])('menyediakan ukuran mobil penumpang dan SUV/pikap untuk Ring %i', (rim, count) => {
+    expect(listTires('mobil', rim as number)).toHaveLength(count as number);
   });
 
   it('menyediakan 12 ukuran ban motor secara keseluruhan', () => {
@@ -50,12 +68,22 @@ describe('listTires', () => {
     expect(total).toBe(12);
   });
 
-  it('menyediakan 18 ukuran ban mobil secara keseluruhan', () => {
+  it('menyediakan setidaknya 70 ukuran ban mobil secara keseluruhan', () => {
     const total = listRims('mobil').reduce(
       (sum, rim) => sum + listTires('mobil', rim).length,
       0,
     );
-    expect(total).toBe(18);
+    expect(total).toBeGreaterThanOrEqual(70);
+  });
+
+  it.each([
+    [18, '225/45R18'],
+    [19, '245/45R19'],
+    [20, '265/50R20'],
+    [21, '285/45R21'],
+    [22, '285/40R22'],
+  ])('menyediakan ukuran %s inci (%s)', (rim, label) => {
+    expect(listTires('mobil', rim as number).some((tire) => tire.label === label)).toBe(true);
   });
 });
 

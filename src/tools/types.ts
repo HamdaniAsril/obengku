@@ -9,8 +9,8 @@ export interface ToolDefinition {
   description: string;
   /** Kategori opsional untuk pengelompokan nanti */
   category?: string;
-  /** Emoji atau teks ikon untuk kartu */
-  icon?: string;
+  /** Ikon SVG full-color untuk kartu (bukan emoji) */
+  icon?: ComponentType<{ className?: string }>;
   /** Komponen React yang merender UI tool */
   component: ComponentType;
 }

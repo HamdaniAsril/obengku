@@ -1,6 +1,8 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
+import { Alert } from '@/components/Alert';
+import { StarStamp } from '@/components/StarStamp';
 import { buildXlsx, inferCell, parseCsv, type CellValue } from './logic';
 
 const PREVIEW_ROWS = 5;
@@ -14,7 +16,7 @@ const TYPE_LABEL: Record<CellValue['kind'], string> = {
 };
 
 const ROW_NUMBER_CLASS =
-  'px-3 py-2 text-xs font-normal tabular-nums text-neutral-600 dark:text-neutral-400';
+  'px-3 py-2 text-xs font-normal tabular-nums text-muted';
 const CELL_CLASS = 'px-3 py-2 align-top';
 
 function displayCell(raw: string) {
@@ -93,7 +95,7 @@ export function CsvToExcel() {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <label htmlFor="berkas-csv" className="block text-sm font-medium">
+        <label htmlFor="berkas-csv" className="block text-sm font-semibold">
           Berkas CSV
         </label>
         <input
@@ -102,52 +104,47 @@ export function CsvToExcel() {
           type="file"
           accept=".csv,text/csv,text/plain"
           onChange={(event) => handleFile(event.target.files?.[0])}
-          className="block w-full min-h-11 text-sm file:min-h-11 file:cursor-pointer file:rounded-lg file:border file:border-neutral-300 file:bg-white file:px-4 file:py-2 file:text-sm file:font-medium dark:file:border-neutral-700 dark:file:bg-neutral-900"
+          className="field block w-full"
         />
-        <p className="max-w-prose text-xs text-neutral-600 dark:text-neutral-400">
+        <p className="max-w-prose text-xs text-muted">
           Diproses sepenuhnya di perangkat Anda — berkas tidak pernah dikirim ke server mana pun.
         </p>
       </div>
 
-      {error ? (
-        <p
-          role="alert"
-          className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200"
-        >
-          {error}
-        </p>
-      ) : null}
+      {error ? <Alert>{error}</Alert> : null}
 
       {fileName ? (
         <div className="space-y-5">
-          <dl className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
-              <dt className="text-sm text-neutral-600 dark:text-neutral-400">Berkas</dt>
-              <dd className="mt-1 break-all text-sm font-medium">{fileName}</dd>
+          <div className="result-card">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm font-semibold text-muted">Berkas siap dikonversi</p>
+              <StarStamp key={fileName} />
             </div>
-            <div className="rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
-              <dt className="text-sm text-neutral-600 dark:text-neutral-400">Baris</dt>
-              <dd className="mt-1 text-lg font-medium tabular-nums">
-                {rows.length.toLocaleString('id-ID')}
-              </dd>
-            </div>
-            <div className="rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
-              <dt className="text-sm text-neutral-600 dark:text-neutral-400">Kolom</dt>
-              <dd className="mt-1 text-lg font-medium tabular-nums">
-                {columnCount.toLocaleString('id-ID')}
-              </dd>
-            </div>
-          </dl>
+            <dl className="ledger mt-2 sm:max-w-md">
+              <div>
+                <dt>Berkas</dt>
+                <dd className="max-w-[16rem] break-all">{fileName}</dd>
+              </div>
+              <div>
+                <dt>Baris</dt>
+                <dd>{rows.length.toLocaleString('id-ID')}</dd>
+              </div>
+              <div>
+                <dt>Kolom</dt>
+                <dd>{columnCount.toLocaleString('id-ID')}</dd>
+              </div>
+            </dl>
+          </div>
 
           <div className="space-y-2">
-            <p className="text-sm font-medium">
+            <p className="text-sm font-semibold">
               Pratinjau {Math.min(PREVIEW_ROWS, rows.length)} baris pertama
             </p>
-            <div className="overflow-x-auto rounded-xl border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+            <div className="overflow-x-auto rounded-card border border-hairline bg-surface">
               <table className="w-full text-left text-sm">
                 <tbody>
                   {preview.map((row, rowIndex) => {
-                    const divider = rowIndex === 0 ? '' : 'border-t border-neutral-200 dark:border-neutral-800';
+                    const divider = rowIndex === 0 ? '' : 'border-t border-hairline';
                     return (
                       <tr key={rowIndex}>
                         <th scope="row" className={`${ROW_NUMBER_CLASS} ${divider}`}>
@@ -158,9 +155,7 @@ export function CsvToExcel() {
                           return (
                             <td key={columnIndex} className={`${CELL_CLASS} ${divider}`}>
                               <span className="block break-words">{text}</span>
-                              <span className="block text-xs text-neutral-600 dark:text-neutral-400">
-                                {label}
-                              </span>
+                              <span className="block text-xs text-muted">{label}</span>
                             </td>
                           );
                         })}
@@ -170,7 +165,7 @@ export function CsvToExcel() {
                 </tbody>
               </table>
             </div>
-            <p className="max-w-prose text-xs text-neutral-600 dark:text-neutral-400">
+            <p className="max-w-prose text-xs text-muted">
               Label di bawah tiap nilai adalah tipe sel yang akan ditulis ke Excel. Kolom
               berawalan angka nol ditandai <strong>teks</strong> agar nol di depan tidak hilang.
             </p>
@@ -181,15 +176,11 @@ export function CsvToExcel() {
               type="button"
               onClick={handleDownload}
               disabled={rows.length === 0}
-              className="min-h-11 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="btn btn-primary"
             >
               Unduh {outputName(fileName)}
             </button>
-            <button
-              type="button"
-              onClick={reset}
-              className="min-h-11 rounded-lg border border-neutral-300 bg-white px-4 py-2 text-sm font-medium hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:bg-neutral-800"
-            >
+            <button type="button" onClick={reset} className="btn btn-ghost">
               Ganti berkas
             </button>
           </div>

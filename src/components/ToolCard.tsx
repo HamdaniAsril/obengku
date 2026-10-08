@@ -1,19 +1,21 @@
 import Link from 'next/link';
-import type { ToolDefinition } from '@/tools/types';
+import type { HomeTool } from './homeCatalog';
+import { lookFor } from './homeCatalog';
+import { ChevronRightLine } from './icons/LineIcons';
 
-export function ToolCard({ tool }: { tool: ToolDefinition }) {
+export function ToolCard({ tool }: { tool: HomeTool }) {
+  const { icon: Icon, color } = lookFor(tool.slug);
+
   return (
-    <Link
-      href={`/tools/${tool.slug}`}
-      className="group block rounded-xl border border-neutral-200 bg-white p-5 transition hover:border-neutral-400 hover:shadow-sm motion-reduce:transition-none dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-600"
-    >
-      {tool.icon ? (
-        <span aria-hidden className="text-2xl">
-          {tool.icon}
-        </span>
-      ) : null}
-      <h2 className="mt-3 font-medium group-hover:underline">{tool.name}</h2>
-      <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">{tool.description}</p>
+    <Link href={`/tools/${tool.slug}`} className="tool-card">
+      <span className="tool-card__top">
+        <Icon className="size-6" style={{ color }} />
+        <ChevronRightLine className="tool-card__chevron size-4" />
+      </span>
+      <span className="tool-card__text">
+        <h2 className="tool-card__title">{tool.name}</h2>
+        <p className="tool-card__desc">{tool.description}</p>
+      </span>
     </Link>
   );
 }

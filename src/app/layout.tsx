@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import './globals.css';
 import { AppShell } from '@/components/AppShell';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const body = Inter({ subsets: ['latin'], variable: '--font-face-body', display: 'swap' });
 
 export const metadata: Metadata = {
   title: 'Obengku — Kumpulan Tools Harian',
@@ -15,8 +15,16 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="id" className={inter.variable}>
-      <body className="bg-neutral-50 text-neutral-900 antialiased dark:bg-neutral-950 dark:text-neutral-100">
+    <html lang="id" className={body.variable}>
+      <head>
+        {/* Sisa data mode gelap lama: hapus kunci tersimpan sekali saat muat. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{localStorage.removeItem("obengku-theme");}catch(e){}})()`,
+          }}
+        />
+      </head>
+      <body className="antialiased">
         <AppShell>{children}</AppShell>
       </body>
     </html>

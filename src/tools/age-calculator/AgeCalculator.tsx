@@ -1,6 +1,8 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { Alert } from '@/components/Alert';
+import { StarStamp } from '@/components/StarStamp';
 import { calculateAge, parseDateInput, toDateInputValue } from './logic';
 
 export function AgeCalculator() {
@@ -41,7 +43,7 @@ export function AgeCalculator() {
   return (
     <div className="space-y-6">
       <div className="max-w-xs space-y-2">
-        <label htmlFor="tanggal-lahir" className="block text-sm font-medium">
+        <label htmlFor="tanggal-lahir" className="block text-sm font-semibold">
           Tanggal lahir
         </label>
         <input
@@ -50,49 +52,44 @@ export function AgeCalculator() {
           value={birthValue}
           max={toDateInputValue(today)}
           onChange={(event) => setBirthValue(event.target.value)}
-          className="min-h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+          className="field"
         />
       </div>
 
-      {error ? (
-        <p
-          role="alert"
-          className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200"
-        >
-          {error}
-        </p>
-      ) : null}
+      {error ? <Alert>{error}</Alert> : null}
 
       {result ? (
-        <div className="space-y-4">
-          <div className="rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-800 dark:bg-neutral-900">
-            <p className="text-sm text-neutral-600 dark:text-neutral-400">Umur</p>
-            <p className="mt-1 text-2xl font-semibold tabular-nums">
+        <div className="space-y-5">
+          <div className="result-card">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm font-semibold text-muted">Umur</p>
+              <StarStamp
+                key={`${result.years}-${result.months}-${result.days}`}
+              />
+            </div>
+            <p className="mt-1 font-display text-[1.7rem] leading-[1.25] tracking-[-0.03em] tabular-nums md:text-[2.1rem]">
               {result.years} tahun {result.months} bulan {result.days} hari
             </p>
           </div>
 
-          <dl className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <dl className="ledger max-w-md">
             {[
               { label: 'Total bulan', value: result.totalMonths.toLocaleString('id-ID') },
               { label: 'Total minggu', value: result.totalWeeks.toLocaleString('id-ID') },
               { label: 'Total hari', value: result.totalDays.toLocaleString('id-ID') },
             ].map((item) => (
-              <div
-                key={item.label}
-                className="rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900"
-              >
-                <dt className="text-sm text-neutral-600 dark:text-neutral-400">{item.label}</dt>
-                <dd className="mt-1 text-lg font-medium tabular-nums">{item.value}</dd>
+              <div key={item.label}>
+                <dt>{item.label}</dt>
+                <dd>{item.value}</dd>
               </div>
             ))}
           </dl>
 
-          <div className="rounded-xl border border-neutral-200 bg-white p-5 text-sm dark:border-neutral-800 dark:bg-neutral-900">
+          <div className="max-w-prose space-y-1 text-[15px]">
             <p>
               Lahir pada hari <strong>{result.weekdayBorn}</strong>.
             </p>
-            <p className="mt-1">
+            <p>
               Ulang tahun berikutnya <strong>{formatDate(result.nextBirthday)}</strong>, dalam{' '}
               <strong>{result.daysToNextBirthday}</strong> hari.
             </p>
